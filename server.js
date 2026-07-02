@@ -18,6 +18,13 @@ app.use(
   })
 );
 
+const { Pool } = require("pg");
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false
+});
+
 const products = [
   {
     id: 1,
@@ -41,6 +48,34 @@ const products = [
     description: "a cute everyday tote bag."
   }
 ];
+
+async function initDb() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS orders (
+      id SERIAL PRIMARY KEY,
+      stripe_session_id TEXT UNIQUE,
+      customer_email TEXT,
+      customer_name TEXT,
+      shipping_name TEXT,
+      shipping_address TEXT,
+      total INTEGER,
+      status TEXT DEFAULT 'paid',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS order_items (
+      id SERIAL PRIMARY KEY,
+      order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+      product_name TEXT,
+      quantity INTEGER,
+      price INTEGER
+    )
+  `);
+}
+
+initDb();
 
 function getCart(req) {
   if (!req.session.cart) req.session.cart = [];
@@ -130,6 +165,10 @@ app.get("/checkout", (req, res) => {
 app.post("/create-checkout-session", async (req, res) => {
   const cart = getCart(req);
 
+  metadata: {
+  cart: JSON.stringify(cart)
+},
+  
   if (cart.length === 0) {
     return res.redirect("/cart");
   }
