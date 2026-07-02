@@ -35,7 +35,9 @@
     <% }) %>
 
     <h3>total: $<%= total %></h3>
-    <a class="button" href="/checkout">checkout</a>
+    <form action="/create-checkout-session" method="POST">
+  <button type="submit">checkout</button>
+</form>
   <% } %>
 </main>
 
