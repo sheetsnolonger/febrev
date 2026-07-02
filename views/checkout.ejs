@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>checkout | feb & rev</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+  <h1>feb & rev</h1>
+  <nav>
+    <a href="/">shop</a>
+    <a href="/cart">cart (<%= cartCount %>)</a>
+  </nav>
+</header>
+
+<main>
+  <h2>checkout</h2>
+
+  <% if (cart.length === 0) { %>
+    <p>your cart is empty.</p>
+  <% } else { %>
+    <p>total: $<%= total %></p>
+
+    <form action="/checkout" method="POST" class="checkout-form">
+      <input name="name" placeholder="name" required>
+      <input name="email" placeholder="email" required>
+      <input name="address" placeholder="shipping address" required>
+      <button type="submit">place test order</button>
+    </form>
+  <% } %>
+</main>
+
+</body>
+</html>
