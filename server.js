@@ -18,7 +18,7 @@ app.set("view engine", "ejs");
 const products = [
   {
     id: 1,
-    name: "cat crochet doll "fangs"",
+    name: "cat crochet doll 'fangs'",
     price: 40,
     image: "",
     description: "hand crocheted by feb herself! :-)"
