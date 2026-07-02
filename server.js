@@ -18,25 +18,12 @@ app.set("view engine", "ejs");
 const products = [
   {
     id: 1,
-    name: "feb & rev shirt",
-    price: 25,
-    image: "https://placehold.co/500x500?text=feb+%26+rev+shirt",
-    description: "a dark feb & rev shirt."
+    name: "cat crochet doll "fangs"",
+    price: 40,
+    image: "",
+    description: "hand crocheted by feb herself! :-)"
   },
-  {
-    id: 2,
-    name: "feb & rev sticker pack",
-    price: 8,
-    image: "https://placehold.co/500x500?text=stickers",
-    description: "goth sticker pack for laptops, phones, and notebooks."
-  },
-  {
-    id: 3,
-    name: "feb & rev tote bag",
-    price: 18,
-    image: "https://placehold.co/500x500?text=tote+bag",
-    description: "a black everyday tote bag."
-  }
+
 ];
 
 async function initDb() {
