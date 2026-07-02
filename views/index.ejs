@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+  <h1>feb & rev</h1>
+  <p>cute stuff, handmade things, and little internet goods</p>
+  <nav>
+    <a href="/">shop</a>
+    <a href="/cart">cart (<%= cartCount %>)</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <h2>welcome to febrev.shop</h2>
+    <p>small shop for cute items, merch, and whatever we feel like making.</p>
+  </section>
+
+  <section class="grid">
+    <% products.forEach(product => { %>
+      <div class="card">
+        <img src="<%= product.image %>" alt="<%= product.name %>">
+        <h3><%= product.name %></h3>
+        <p>$<%= product.price %></p>
+        <a class="button" href="/product/<%= product.id %>">view item</a>
+      </div>
+    <% }) %>
+  </section>
+</main>
+
+<footer>
+  febrev.shop
+</footer>
+
+</body>
+</html>
