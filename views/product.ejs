@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %> | feb & rev</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+  <h1>feb & rev</h1>
+  <nav>
+    <a href="/">shop</a>
+    <a href="/cart">cart (<%= cartCount %>)</a>
+  </nav>
+</header>
+
+<main>
+  <div class="product-page">
+    <img src="<%= product.image %>" alt="<%= product.name %>">
+
+    <div>
+      <h2><%= product.name %></h2>
+      <p class="price">$<%= product.price %></p>
+      <p><%= product.description %></p>
+
+      <form action="/cart/add/<%= product.id %>" method="POST">
+        <button type="submit">add to cart</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
