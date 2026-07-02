@@ -1,14 +1,31 @@
 {
   "name": "febrev-shop",
   "version": "1.0.0",
+  "description": "feb & rev online shop",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
+  "keywords": [
+    "shop",
+    "ecommerce",
+    "express",
+    "stripe",
+    "postgres",
+    "febrev"
+  ],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^5.1.0",
-    "express-session": "^1.18.1"
+    "express-session": "^1.18.1",
+    "pg": "^8.13.1",
+    "stripe": "^17.7.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
