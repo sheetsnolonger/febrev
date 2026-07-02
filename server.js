@@ -1,5 +1,6 @@
 const express = require("express");
 const session = require("express-session");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -126,13 +127,59 @@ app.get("/checkout", (req, res) => {
   });
 });
 
-app.post("/checkout", (req, res) => {
-  req.session.cart = [];
-  res.send(`
-    <h1>order received</h1>
-    <p>this is a test checkout. stripe/paypal can be added later.</p>
-    <a href="/">back to shop</a>
-  `);
+app.post("/create-checkout-session", async (req, res) => {
+  const cart = getCart(req);
+
+  if (cart.length === 0) {
+    return res.redirect("/cart");
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+
+      line_items: cart.map(item => ({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.name,
+            images: [item.image]
+          },
+          unit_amount: item.price * 100
+        },
+        quantity: item.quantity
+      })),
+
+      shipping_address_collection: {
+        allowed_countries: ["US"]
+      },
+
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: {
+              amount: 500,
+              currency: "usd"
+            },
+            display_name: "standard shipping",
+            delivery_estimate: {
+              minimum: { unit: "business_day", value: 3 },
+              maximum: { unit: "business_day", value: 7 }
+            }
+          }
+        }
+      ],
+
+      success_url: `${process.env.DOMAIN}/success`,
+      cancel_url: `${process.env.DOMAIN}/cart`
+    });
+
+    res.redirect(session.url);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("checkout error");
+  }
 });
 
 app.listen(PORT, "0.0.0.0", () => {
