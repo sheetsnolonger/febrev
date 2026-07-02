@@ -20,7 +20,7 @@ const products = [
     id: 1,
     name: "cat crochet doll 'fangs'",
     price: 40,
-    image: "",
+    image: "https://pyxis.nymag.com/v1/imgs/4ba/176/b5cb8c6fc4c22054ebde2816426921dccf-31-black-kitten.rsquare.w400.jpg",
     description: "hand crocheted by feb herself! :-)"
   },
 
