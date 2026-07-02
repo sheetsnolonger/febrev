@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>cart | feb & rev</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+  <h1>feb & rev</h1>
+  <nav>
+    <a href="/">shop</a>
+    <a href="/cart">cart (<%= cartCount %>)</a>
+  </nav>
+</header>
+
+<main>
+  <h2>cart</h2>
+
+  <% if (cart.length === 0) { %>
+    <p>your cart is empty.</p>
+  <% } else { %>
+    <% cart.forEach(item => { %>
+      <div class="cart-item">
+        <img src="<%= item.image %>" alt="<%= item.name %>">
+        <div>
+          <h3><%= item.name %></h3>
+          <p>$<%= item.price %> x <%= item.quantity %></p>
+
+          <form action="/cart/remove/<%= item.id %>" method="POST">
+            <button type="submit">remove</button>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+
+    <h3>total: $<%= total %></h3>
+    <a class="button" href="/checkout">checkout</a>
+  <% } %>
+</main>
+
+</body>
+</html>
