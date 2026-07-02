@@ -1,160 +1,189 @@
 body {
   margin: 0;
-  font-family: "Times New Roman", serif;
-  background: #070507;
-  color: #e6dce2;
+  font-family: Georgia, "Times New Roman", serif;
+  background: #0b090b;
+  color: #eee7eb;
 }
 
 header {
-  background: #130911;
-  border-bottom: 2px solid #6b1028;
-  padding: 28px;
+  background: #120d11;
+  border-bottom: 1px solid #2a1a22;
+  padding: 34px 20px;
   text-align: center;
 }
 
 h1 {
   margin: 0;
-  font-size: 52px;
-  letter-spacing: 3px;
-  color: #d8c7d0;
+  font-size: 46px;
+  letter-spacing: 4px;
   font-weight: normal;
+  text-transform: lowercase;
 }
 
-h2, h3 {
-  color: #e8d7df;
-  font-weight: normal;
-}
-
-p {
-  color: #b9a9b2;
+header p {
+  margin: 10px 0 0;
+  color: #a99ca3;
 }
 
 nav {
-  margin-top: 15px;
-}
-
-a {
-  color: #c94f72;
+  margin-top: 18px;
 }
 
 nav a {
-  margin: 0 10px;
+  color: #eee7eb;
   text-decoration: none;
-  border-bottom: 1px solid #6b1028;
+  margin: 0 12px;
+  font-size: 15px;
+}
+
+nav a:hover {
+  color: #b34b68;
 }
 
 main {
-  max-width: 1000px;
-  margin: 30px auto;
-  padding: 15px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 20px;
 }
 
 .hero {
-  background: #0f0a0e;
-  border: 1px solid #3a1725;
-  padding: 25px;
-  margin-bottom: 25px;
+  background: linear-gradient(135deg, #171116, #0e0b0e);
+  border: 1px solid #2d1d25;
+  padding: 48px 30px;
+  margin-bottom: 32px;
   text-align: center;
+}
+
+.hero h2 {
+  margin-top: 0;
+  font-size: 34px;
+  font-weight: normal;
+}
+
+.hero p {
+  color: #b8adb3;
+  font-size: 17px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 22px;
 }
 
 .card {
-  background: #0f0a0e;
-  border: 1px solid #3a1725;
-  padding: 15px;
-  text-align: center;
+  background: #120f12;
+  border: 1px solid #2a1a22;
+  padding: 18px;
+}
+
+.card:hover {
+  border-color: #704057;
 }
 
 .card img,
 .product-page img,
 .cart-item img {
   width: 100%;
-  max-width: 300px;
-  border: 1px solid #4a1c2d;
-  filter: grayscale(35%) contrast(105%);
+  max-width: 320px;
+  border: 1px solid #2a1a22;
+  display: block;
+  margin: 0 auto 16px;
+}
+
+.card h3 {
+  margin-bottom: 6px;
+  font-size: 21px;
+  font-weight: normal;
+}
+
+.card p,
+.product-page p,
+.cart-item p {
+  color: #b8adb3;
+}
+
+.price {
+  font-size: 24px;
+  color: #d8c7cf;
 }
 
 .button,
 button {
   display: inline-block;
-  background: #230d18;
-  color: #e8d7df;
-  border: 1px solid #7c1732;
-  padding: 10px 15px;
-  font-family: "Times New Roman", serif;
-  font-size: 16px;
+  background: #7c1f3a;
+  color: white;
+  border: 0;
+  padding: 11px 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
   cursor: pointer;
   text-decoration: none;
 }
 
 .button:hover,
 button:hover {
-  background: #6b1028;
-  color: white;
+  background: #9a2a4c;
+}
+
+.product-page,
+.cart-item {
+  background: #120f12;
+  border: 1px solid #2a1a22;
+  padding: 24px;
 }
 
 .product-page {
-  display: flex;
-  gap: 30px;
-  background: #0f0a0e;
-  border: 1px solid #3a1725;
-  padding: 25px;
-}
-
-.price {
-  font-size: 24px;
-  color: #d8678b;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 32px;
+  align-items: start;
 }
 
 .cart-item {
   display: flex;
-  gap: 20px;
-  background: #0f0a0e;
-  border: 1px solid #3a1725;
-  padding: 15px;
-  margin-bottom: 15px;
+  gap: 22px;
+  margin-bottom: 16px;
 }
 
 .cart-item img {
   max-width: 120px;
+  margin: 0;
 }
 
 .checkout-form {
   display: grid;
-  gap: 12px;
-  max-width: 400px;
+  gap: 14px;
+  max-width: 440px;
 }
 
 input {
-  padding: 10px;
-  background: #080608;
-  color: #e8d7df;
-  border: 1px solid #4a1c2d;
-  font-family: "Times New Roman", serif;
+  padding: 12px;
+  background: #0b090b;
+  color: #eee7eb;
+  border: 1px solid #33232b;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
-input::placeholder {
-  color: #82717a;
+input:focus {
+  outline: none;
+  border-color: #7c1f3a;
 }
 
 footer {
   text-align: center;
-  padding: 25px;
-  color: #82717a;
+  padding: 30px;
+  color: #857982;
+  border-top: 1px solid #2a1a22;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
   .product-page,
   .cart-item {
     display: block;
   }
 
   h1 {
-    font-size: 38px;
+    font-size: 36px;
   }
 }
