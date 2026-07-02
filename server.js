@@ -182,6 +182,16 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
+app.get("/success", (req, res) => {
+  req.session.cart = [];
+
+  res.send(`
+    <h1>order complete</h1>
+    <p>thank you for shopping feb & rev.</p>
+    <a href="/">back to shop</a>
+  `);
+});
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`feb & rev running on port ${PORT}`);
 });
