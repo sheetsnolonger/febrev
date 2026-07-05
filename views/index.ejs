@@ -1,45 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= title %></title>
+  <title>feb & rev</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
-<header>
+<header class="site-header">
   <h1>feb & rev</h1>
-  <p>sister & brother</p>
+
   <nav>
     <a href="/">shop</a>
+    <a href="#feb">feb</a>
+    <a href="#rev">rev</a>
   </nav>
 </header>
 
-<main>
-  <section class="hero">
-    <h2>handmade crochet & knitted items</h2>
-    <p>browse our catalog below.</p>
-  </section>
+<section id="feb" class="shop-section feb-section">
+  <div class="section-title">
+    <h2>feb</h2>
+    <span>✦</span>
+    <p>handmade pieces from feb</p>
+  </div>
 
-  <section class="grid">
-    <% products.forEach(product => { %>
-      <div class="card">
+  <div class="product-grid">
+    <% febProducts.forEach(product => { %>
+      <div class="product-card">
         <img src="<%= product.image %>" alt="<%= product.name %>">
         <h3><%= product.name %></h3>
-        <p>$<%= product.price %></p>
-        <p><%= product.description %></p>
+        <p class="price">$<%= product.price %></p>
+        <p class="desc"><%= product.description %></p>
 
-        <a class="button" href="/product/<%= product.id %>">view item</a>
-
-        <a class="button" href="<%= product.ebay %>" target="_blank" rel="noopener">
-          buy on ebay
+        <a class="buy-button" href="<%= product.ebay %>" target="_blank" rel="noopener">
+          buy on ebay ↗
         </a>
       </div>
     <% }) %>
-  </section>
-</main>
+  </div>
+</section>
+
+<div class="section-divider">
+  <span>✣</span>
+</div>
+
+<section id="rev" class="shop-section rev-section">
+  <div class="section-title">
+    <h2>rev</h2>
+    <span>✦</span>
+    <p>handmade pieces from rev</p>
+  </div>
+
+  <div class="product-grid">
+    <% revProducts.forEach(product => { %>
+      <div class="product-card">
+        <img src="<%= product.image %>" alt="<%= product.name %>">
+        <h3><%= product.name %></h3>
+        <p class="price">$<%= product.price %></p>
+        <p class="desc"><%= product.description %></p>
+
+        <a class="buy-button" href="<%= product.ebay %>" target="_blank" rel="noopener">
+          buy on ebay ↗
+        </a>
+      </div>
+    <% }) %>
+  </div>
+</section>
 
 <footer>
-  febrev.shop
+  <p>feb & rev</p>
+  <span>✦</span>
+  <p>handmade with care</p>
+  <p>© 2026 febrev.shop</p>
 </footer>
 
 </body>
