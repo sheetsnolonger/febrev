@@ -30,8 +30,9 @@
         <img src="<%= product.image %>" alt="<%= product.name %>">
         <h3><%= product.name %></h3>
         <p class="price">$<%= product.price %></p>
-        <p class="desc"><%= product.description %></p>
-
+        <p class="desc">
+  <%= product.description.split(" ").slice(0, 10).join(" ") %><%= product.description.split(" ").length > 10 ? "..." : "" %>
+</p>
         <a class="buy-button" href="<%= product.ebay %>" target="_blank" rel="noopener">
           buy on ebay ↗
         </a>
