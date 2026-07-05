@@ -55,16 +55,16 @@ nav a:hover {
 
 .feb-section {
   background:
-    radial-gradient(circle at top, rgba(255, 220, 170, 0.08), transparent 38%),
-    radial-gradient(circle at bottom left, rgba(0, 0, 0, 0.45), transparent 45%),
-    linear-gradient(135deg, #2b1a0f, #130c08 70%);
+    radial-gradient(circle at top, rgba(255, 120, 195, 0.18), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(255, 0, 128, 0.08), transparent 55%),
+    linear-gradient(135deg, #2b0018 0%, #470027 45%, #14000d 100%);
 }
 
 .rev-section {
   background:
-    radial-gradient(circle at top, rgba(140, 190, 130, 0.08), transparent 38%),
-    radial-gradient(circle at bottom left, rgba(0, 0, 0, 0.45), transparent 45%),
-    linear-gradient(135deg, #102417, #07110c 72%);
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(70, 70, 70, 0.05), transparent 55%),
+    linear-gradient(135deg, #050505 0%, #0b0b0b 50%, #000000 100%);
 }
 
 .section-title {
@@ -172,7 +172,7 @@ nav a:hover {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background: #142016;
+  background: #050505;
   color: #eee9df;
   padding: 0 18px;
   font-size: 34px;
