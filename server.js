@@ -30,28 +30,15 @@ app.use(
 );
 
 const products = [
-  {
-    id: 1,
-    name: "feb & rev shirt",
-    price: 25,
-    image: "https://placehold.co/500x500?text=feb+%26+rev+shirt",
-    description: "a dark feb & rev shirt."
-  },
-  {
-    id: 2,
-    name: "feb & rev sticker pack",
-    price: 8,
-    image: "https://placehold.co/500x500?text=stickers",
-    description: "goth sticker pack for laptops, phones, and notebooks."
-  },
-  {
-    id: 3,
-    name: "feb & rev tote bag",
-    price: 18,
-    image: "https://placehold.co/500x500?text=tote+bag",
-    description: "a black everyday tote bag."
-  }
-];
+{
+  id: 1,
+  name: "medium black handmade stuffed crochet kitty",
+  price: 20,
+  image: "/images/kittycrochet1.jpg",
+  description: "this crocheted kitty is not only a stuffed animal, but a friend. crocheted with black yarn, white button eyes, and a white X mouth. made with love.",
+  etsy: "https://www.etsy.com/"
+}
+
 
 async function initDb() {
   await pool.query(`
