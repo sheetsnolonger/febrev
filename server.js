@@ -14,7 +14,7 @@ const febProducts = [
     name: "medium black handmade stuffed crochet kitty",
     price: 20,
     image: "https://placehold.co/400x400?text=crochet+kitty",
-    description: "this crocheted kitty is not only a stuffed animal, but a friend. crocheted with black yarn, white button eyes, and a white X mouth. ",
+    description: "this crocheted kitty is not only a stuffed animal, but a friend. crocheted with black yarn, white button eyes, and a white x mouth. ",
     ebay: "https://www.ebay.com/"
   },
 ];
