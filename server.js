@@ -17,7 +17,7 @@ const febProducts = [
     description: "this crocheted kitty is not only a stuffed animal, but a friend. crocheted with black yarn, white button eyes, and a white X mouth. ",
     ebay: "https://www.ebay.com/"
   },
-
+];
 const revProducts = [
 
 
