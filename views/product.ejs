@@ -23,8 +23,12 @@
       <p class="price">$<%= product.price %></p>
       <p><%= product.description %></p>
 
-      <form action="/cart/add/<%= product.id %>" method="POST">
-        <button type="submit">add to cart</button>
+<a class="button"
+   href="<%= product.etsy %>"
+   target="_blank"
+   rel="noopener">
+    purchase on etsy
+</a>
       </form>
     </div>
   </div>
