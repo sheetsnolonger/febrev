@@ -8,17 +8,16 @@
 
 <header>
   <h1>feb & rev</h1>
-  <p>crochet, knitting, & clothes</p>
+  <p>handmade dark goods</p>
   <nav>
     <a href="/">shop</a>
-    <a href="/cart">cart (<%= cartCount %>)</a>
   </nav>
 </header>
 
 <main>
   <section class="hero">
-    <h2>welcome to febrev.shop</h2>
-    <p>brother & sister</p>
+    <h2>curated handmade items</h2>
+    <p>browse feb & rev pieces, then purchase through ebay.</p>
   </section>
 
   <section class="grid">
@@ -27,7 +26,13 @@
         <img src="<%= product.image %>" alt="<%= product.name %>">
         <h3><%= product.name %></h3>
         <p>$<%= product.price %></p>
+        <p><%= product.description %></p>
+
         <a class="button" href="/product/<%= product.id %>">view item</a>
+
+        <a class="button" href="<%= product.ebay %>" target="_blank" rel="noopener">
+          buy on ebay
+        </a>
       </div>
     <% }) %>
   </section>
