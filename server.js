@@ -1,12 +1,14 @@
 const express = require("express");
 const session = require("express-session");
-const Stripe = require("stripe");
 const { Pool } = require("pg");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const PAYPAL_BASE =
+  process.env.PAYPAL_MODE === "live"
+    ? "https://api-m.paypal.com"
+    : "https://api-m.sandbox.paypal.com";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -15,22 +17,47 @@ const pool = new Pool({
 
 app.set("view engine", "ejs");
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static("public"));
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "febrev-dev-secret",
+    resave: false,
+    saveUninitialized: true
+  })
+);
+
 const products = [
   {
     id: 1,
-    name: "cat crochet doll 'fangs'",
-    price: 40,
-    image: "https://pyxis.nymag.com/v1/imgs/4ba/176/b5cb8c6fc4c22054ebde2816426921dccf-31-black-kitten.rsquare.w400.jpg",
-    description: "hand crocheted by feb herself! :-)"
+    name: "feb & rev shirt",
+    price: 25,
+    image: "https://placehold.co/500x500?text=feb+%26+rev+shirt",
+    description: "a dark feb & rev shirt."
   },
-
+  {
+    id: 2,
+    name: "feb & rev sticker pack",
+    price: 8,
+    image: "https://placehold.co/500x500?text=stickers",
+    description: "goth sticker pack for laptops, phones, and notebooks."
+  },
+  {
+    id: 3,
+    name: "feb & rev tote bag",
+    price: 18,
+    image: "https://placehold.co/500x500?text=tote+bag",
+    description: "a black everyday tote bag."
+  }
 ];
 
 async function initDb() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS orders (
       id SERIAL PRIMARY KEY,
-      stripe_session_id TEXT UNIQUE,
+      paypal_order_id TEXT UNIQUE,
       customer_email TEXT,
       customer_name TEXT,
       shipping_name TEXT,
@@ -52,118 +79,7 @@ async function initDb() {
   `);
 }
 
-initDb().catch(err => {
-  console.error("database init error:", err);
-});
-
-/*
-  IMPORTANT:
-  this webhook route must stay BEFORE:
-  app.use(express.urlencoded(...))
-*/
-app.post("/stripe-webhook", express.raw({ type: "application/json" }), async (req, res) => {
-  let event;
-
-  try {
-    const sig = req.headers["stripe-signature"];
-
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    console.error("stripe webhook signature error:", err.message);
-    return res.sendStatus(400);
-  }
-
-  if (event.type === "checkout.session.completed") {
-    const stripeSession = event.data.object;
-
-    try {
-      const cart = JSON.parse(stripeSession.metadata.cart || "[]");
-
-      const shipping = stripeSession.shipping_details || {};
-      const address = shipping.address || {};
-
-      const shippingAddress = [
-        address.line1 || "",
-        address.line2 || "",
-        `${address.city || ""}, ${address.state || ""} ${address.postal_code || ""}`,
-        address.country || ""
-      ]
-        .filter(line => line.trim() !== "")
-        .join("\n");
-
-      const existing = await pool.query(
-        "SELECT id FROM orders WHERE stripe_session_id = $1",
-        [stripeSession.id]
-      );
-
-      if (existing.rows.length === 0) {
-        const orderResult = await pool.query(
-          `
-          INSERT INTO orders (
-            stripe_session_id,
-            customer_email,
-            customer_name,
-            shipping_name,
-            shipping_address,
-            total,
-            status
-          )
-          VALUES ($1, $2, $3, $4, $5, $6, $7)
-          RETURNING id
-          `,
-          [
-            stripeSession.id,
-            stripeSession.customer_details?.email || "",
-            stripeSession.customer_details?.name || "",
-            shipping.name || "",
-            shippingAddress,
-            stripeSession.amount_total || 0,
-            "paid"
-          ]
-        );
-
-        const orderId = orderResult.rows[0].id;
-
-        for (const item of cart) {
-          await pool.query(
-            `
-            INSERT INTO order_items (
-              order_id,
-              product_name,
-              quantity,
-              price
-            )
-            VALUES ($1, $2, $3, $4)
-            `,
-            [orderId, item.name, item.quantity, item.price]
-          );
-        }
-
-        console.log("saved order:", orderId);
-      }
-    } catch (err) {
-      console.error("order save error:", err);
-      return res.sendStatus(500);
-    }
-  }
-
-  res.sendStatus(200);
-});
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "febrev-dev-secret",
-    resave: false,
-    saveUninitialized: true
-  })
-);
+initDb().catch(err => console.error("database init error:", err));
 
 function getCart(req) {
   if (!req.session.cart) req.session.cart = [];
@@ -172,6 +88,34 @@ function getCart(req) {
 
 function cartCount(req) {
   return getCart(req).reduce((sum, item) => sum + item.quantity, 0);
+}
+
+function cartTotal(cart) {
+  return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+}
+
+async function getPayPalAccessToken() {
+  const auth = Buffer.from(
+    `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
+  ).toString("base64");
+
+  const response = await fetch(`${PAYPAL_BASE}/v1/oauth2/token`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${auth}`,
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: "grant_type=client_credentials"
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    console.error(data);
+    throw new Error("could not get paypal access token");
+  }
+
+  return data.access_token;
 }
 
 app.get("/", (req, res) => {
@@ -185,9 +129,7 @@ app.get("/", (req, res) => {
 app.get("/product/:id", (req, res) => {
   const product = products.find(p => p.id === Number(req.params.id));
 
-  if (!product) {
-    return res.status(404).send("product not found");
-  }
+  if (!product) return res.status(404).send("product not found");
 
   res.render("product", {
     title: product.name,
@@ -199,9 +141,7 @@ app.get("/product/:id", (req, res) => {
 app.post("/cart/add/:id", (req, res) => {
   const product = products.find(p => p.id === Number(req.params.id));
 
-  if (!product) {
-    return res.status(404).send("product not found");
-  }
+  if (!product) return res.status(404).send("product not found");
 
   const cart = getCart(req);
   const existing = cart.find(item => item.id === product.id);
@@ -223,13 +163,14 @@ app.post("/cart/add/:id", (req, res) => {
 
 app.get("/cart", (req, res) => {
   const cart = getCart(req);
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cartTotal(cart);
 
   res.render("cart", {
     title: "cart",
     cart,
     total,
-    cartCount: cartCount(req)
+    cartCount: cartCount(req),
+    paypalClientId: process.env.PAYPAL_CLIENT_ID || ""
   });
 });
 
@@ -238,74 +179,176 @@ app.post("/cart/remove/:id", (req, res) => {
   res.redirect("/cart");
 });
 
-app.post("/create-checkout-session", async (req, res) => {
+app.post("/api/paypal/create-order", async (req, res) => {
   const cart = getCart(req);
 
   if (cart.length === 0) {
-    return res.redirect("/cart");
+    return res.status(400).json({ error: "cart is empty" });
   }
 
+  const subtotal = cartTotal(cart);
+  const shipping = 5;
+  const total = subtotal + shipping;
+
   try {
-    const checkoutSession = await stripe.checkout.sessions.create({
-      mode: "payment",
+    const accessToken = await getPayPalAccessToken();
 
-      line_items: cart.map(item => ({
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: item.name,
-            images: [item.image]
-          },
-          unit_amount: item.price * 100
-        },
-        quantity: item.quantity
-      })),
-
-      metadata: {
-        cart: JSON.stringify(cart)
+    const response = await fetch(`${PAYPAL_BASE}/v2/checkout/orders`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json"
       },
-
-      shipping_address_collection: {
-        allowed_countries: ["US"]
-      },
-
-      shipping_options: [
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: {
-              amount: 500,
-              currency: "usd"
-            },
-            display_name: "standard shipping",
-            delivery_estimate: {
-              minimum: {
-                unit: "business_day",
-                value: 3
-              },
-              maximum: {
-                unit: "business_day",
-                value: 7
+      body: JSON.stringify({
+        intent: "CAPTURE",
+        purchase_units: [
+          {
+            description: "feb & rev order",
+            amount: {
+              currency_code: "USD",
+              value: total.toFixed(2),
+              breakdown: {
+                item_total: {
+                  currency_code: "USD",
+                  value: subtotal.toFixed(2)
+                },
+                shipping: {
+                  currency_code: "USD",
+                  value: shipping.toFixed(2)
+                }
               }
-            }
+            },
+            items: cart.map(item => ({
+              name: item.name,
+              quantity: String(item.quantity),
+              unit_amount: {
+                currency_code: "USD",
+                value: item.price.toFixed(2)
+              }
+            }))
           }
+        ],
+        application_context: {
+          shipping_preference: "GET_FROM_FILE"
         }
-      ],
-
-      success_url: `${process.env.DOMAIN || "http://localhost:3000"}/success`,
-      cancel_url: `${process.env.DOMAIN || "http://localhost:3000"}/cart`
+      })
     });
 
-    res.redirect(checkoutSession.url);
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(data);
+      return res.status(500).json({ error: "paypal create order failed" });
+    }
+
+    res.json({ id: data.id });
   } catch (err) {
-    console.error("checkout error:", err);
-    res.status(500).send("checkout error");
+    console.error("paypal create order error:", err);
+    res.status(500).json({ error: "paypal create order error" });
+  }
+});
+
+app.post("/api/paypal/capture-order/:orderId", async (req, res) => {
+  const cart = getCart(req);
+
+  try {
+    const accessToken = await getPayPalAccessToken();
+
+    const response = await fetch(
+      `${PAYPAL_BASE}/v2/checkout/orders/${req.params.orderId}/capture`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(data);
+      return res.status(500).json({ error: "paypal capture failed" });
+    }
+
+    const purchaseUnit = data.purchase_units?.[0];
+    const capture = purchaseUnit?.payments?.captures?.[0];
+
+    if (capture?.status === "COMPLETED") {
+      const payer = data.payer || {};
+      const shipping = purchaseUnit.shipping || {};
+      const address = shipping.address || {};
+
+      const shippingAddress = [
+        address.address_line_1 || "",
+        address.address_line_2 || "",
+        `${address.admin_area_2 || ""}, ${address.admin_area_1 || ""} ${address.postal_code || ""}`,
+        address.country_code || ""
+      ]
+        .filter(line => line.trim() !== "")
+        .join("\n");
+
+      const existing = await pool.query(
+        "SELECT id FROM orders WHERE paypal_order_id = $1",
+        [data.id]
+      );
+
+      if (existing.rows.length === 0) {
+        const orderResult = await pool.query(
+          `
+          INSERT INTO orders (
+            paypal_order_id,
+            customer_email,
+            customer_name,
+            shipping_name,
+            shipping_address,
+            total,
+            status
+          )
+          VALUES ($1, $2, $3, $4, $5, $6, $7)
+          RETURNING id
+          `,
+          [
+            data.id,
+            payer.email_address || "",
+            `${payer.name?.given_name || ""} ${payer.name?.surname || ""}`.trim(),
+            shipping.name?.full_name || "",
+            shippingAddress,
+            Math.round(Number(capture.amount.value) * 100),
+            "paid"
+          ]
+        );
+
+        const orderId = orderResult.rows[0].id;
+
+        for (const item of cart) {
+          await pool.query(
+            `
+            INSERT INTO order_items (
+              order_id,
+              product_name,
+              quantity,
+              price
+            )
+            VALUES ($1, $2, $3, $4)
+            `,
+            [orderId, item.name, item.quantity, item.price]
+          );
+        }
+      }
+
+      req.session.cart = [];
+    }
+
+    res.json(data);
+  } catch (err) {
+    console.error("paypal capture error:", err);
+    res.status(500).json({ error: "paypal capture error" });
   }
 });
 
 app.get("/success", (req, res) => {
-  req.session.cart = [];
-
   res.send(`
     <!DOCTYPE html>
     <html>
@@ -321,7 +364,6 @@ app.get("/success", (req, res) => {
           <a href="/cart">cart</a>
         </nav>
       </header>
-
       <main>
         <section class="hero">
           <h2>order complete</h2>
@@ -355,14 +397,13 @@ app.get("/orders", async (req, res) => {
             <a href="/">shop</a>
           </nav>
         </header>
-
         <main>
           ${orders.rows.map(order => `
             <section class="hero">
               <h2>order #${order.id}</h2>
               <p><b>email:</b> ${order.customer_email}</p>
               <p><b>name:</b> ${order.customer_name}</p>
-              <p><b>shipping:</b><br>${order.shipping_address.replace(/\n/g, "<br>")}</p>
+              <p><b>shipping:</b><br>${String(order.shipping_address || "").replace(/\n/g, "<br>")}</p>
               <p><b>total:</b> $${(order.total / 100).toFixed(2)}</p>
               <p><b>status:</b> ${order.status}</p>
             </section>
