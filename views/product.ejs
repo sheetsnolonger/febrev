@@ -10,7 +10,6 @@
   <h1>feb & rev</h1>
   <nav>
     <a href="/">shop</a>
-    <a href="/cart">cart (<%= cartCount %>)</a>
   </nav>
 </header>
 
@@ -23,16 +22,16 @@
       <p class="price">$<%= product.price %></p>
       <p><%= product.description %></p>
 
-<a class="button"
-   href="<%= product.ebay %>"
-   target="_blank"
-   rel="noopener">
-   buy on ebay
-</a>
-      </form>
+      <a class="button" href="<%= product.ebay %>" target="_blank" rel="noopener">
+        buy on ebay
+      </a>
     </div>
   </div>
 </main>
+
+<footer>
+  febrev.shop
+</footer>
 
 </body>
 </html>
