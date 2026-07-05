@@ -2,37 +2,54 @@
 <html>
 <head>
   <title><%= title %> | feb & rev</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="stylesheet" href="/style.css">
-<link rel="icon" type="image/png" href="/favicon.png">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
-<header>
+<header class="site-header">
   <h1>feb & rev</h1>
   <nav>
     <a href="/">shop</a>
+    <a href="/#feb">feb</a>
+    <a href="/#rev">rev</a>
   </nav>
 </header>
 
-<main>
-  <div class="product-page">
-    <img src="<%= product.image %>" alt="<%= product.name %>">
+<main class="product-detail-page">
+  <section class="product-detail-card">
+    <div class="product-gallery">
+      <img class="main-product-image" src="<%= product.image %>" alt="<%= product.name %>">
+    </div>
 
-    <div>
+    <div class="product-info">
+      <p class="product-label">handmade item</p>
       <h2><%= product.name %></h2>
       <p class="price">$<%= product.price %></p>
-      <p><%= product.description %></p>
 
-      <a class="button" href="<%= product.ebay %>" target="_blank" rel="noopener">
-        buy on ebay
+      <p class="full-desc"><%= product.description %></p>
+
+      <div class="product-notes">
+        <p><b>processing:</b> ships after handmade preparation</p>
+        <p><b>condition:</b> handmade / small batch</p>
+        <p><b>checkout:</b> handled securely through ebay</p>
+      </div>
+
+      <a class="buy-button" href="<%= product.ebay %>" target="_blank" rel="noopener">
+        buy on ebay ↗
       </a>
+
+      <a class="back-link" href="/">← back to shop</a>
     </div>
-  </div>
+  </section>
 </main>
 
 <footer>
-  febrev.shop
+  <p>feb & rev</p>
+  <span>✦</span>
+  <p>handmade with care</p>
+  <p>© 2026 febrev.shop</p>
 </footer>
 
 </body>
