@@ -13,12 +13,13 @@ const febProducts = [
     id: 1,
     name: "medium black handmade stuffed crochet kitty",
     price: 20,
-    image: "",
+    image: "https://placehold.co/400x400?text=crochet+kitty",
     description: "this crocheted kitty is not only a stuffed animal, but a friend. crocheted with black yarn, white button eyes, and a white X mouth. ",
     ebay: "https://www.ebay.com/"
   },
 ];
-const revProducts = [
+
+const revProducts = [];
 
 
 const allProducts = [...febProducts, ...revProducts];
