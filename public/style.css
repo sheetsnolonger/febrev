@@ -1,189 +1,243 @@
+@import url("https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Cormorant+Garamond:wght@400;500;600&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
-  background: #0b090b;
-  color: #eee7eb;
+  background: #080807;
+  color: #eee9df;
+  font-family: "Cormorant Garamond", Georgia, serif;
 }
 
-header {
-  background: #120d11;
-  border-bottom: 1px solid #2a1a22;
-  padding: 34px 20px;
-  text-align: center;
+.site-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  padding: 28px 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-h1 {
+.site-header h1 {
   margin: 0;
-  font-size: 46px;
-  letter-spacing: 4px;
+  font-family: "UnifrakturCook", serif;
+  font-size: 42px;
+  letter-spacing: 1px;
   font-weight: normal;
-  text-transform: lowercase;
-}
-
-header p {
-  margin: 10px 0 0;
-  color: #a99ca3;
-}
-
-nav {
-  margin-top: 18px;
 }
 
 nav a {
-  color: #eee7eb;
+  color: #eee9df;
   text-decoration: none;
-  margin: 0 12px;
-  font-size: 15px;
+  margin-left: 34px;
+  font-size: 18px;
+  letter-spacing: 1px;
 }
 
 nav a:hover {
-  color: #b34b68;
+  color: #cdbda7;
 }
 
-main {
+.shop-section {
+  min-height: 100vh;
+  padding: 125px 7vw 90px;
+  position: relative;
+}
+
+.feb-section {
+  background:
+    radial-gradient(circle at top, rgba(255, 220, 170, 0.08), transparent 38%),
+    radial-gradient(circle at bottom left, rgba(0, 0, 0, 0.45), transparent 45%),
+    linear-gradient(135deg, #2b1a0f, #130c08 70%);
+}
+
+.rev-section {
+  background:
+    radial-gradient(circle at top, rgba(140, 190, 130, 0.08), transparent 38%),
+    radial-gradient(circle at bottom left, rgba(0, 0, 0, 0.45), transparent 45%),
+    linear-gradient(135deg, #102417, #07110c 72%);
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 54px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-family: "UnifrakturCook", serif;
+  font-size: 86px;
+  font-weight: normal;
+  letter-spacing: 4px;
+}
+
+.section-title span {
+  display: block;
+  font-size: 26px;
+  margin: 8px 0 15px;
+}
+
+.section-title p {
+  margin: 0;
+  letter-spacing: 7px;
+  font-size: 18px;
+}
+
+.product-grid {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 40px 20px;
-}
-
-.hero {
-  background: linear-gradient(135deg, #171116, #0e0b0e);
-  border: 1px solid #2d1d25;
-  padding: 48px 30px;
-  margin-bottom: 32px;
-  text-align: center;
-}
-
-.hero h2 {
-  margin-top: 0;
-  font-size: 34px;
-  font-weight: normal;
-}
-
-.hero p {
-  color: #b8adb3;
-  font-size: 17px;
-}
-
-.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
 }
 
-.card {
-  background: #120f12;
-  border: 1px solid #2a1a22;
-  padding: 18px;
+.product-card {
+  background: rgba(8, 8, 7, 0.55);
+  border: 1px solid rgba(238, 233, 223, 0.08);
+  padding: 15px;
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
 }
 
-.card:hover {
-  border-color: #704057;
+.product-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(238, 233, 223, 0.28);
+  background: rgba(8, 8, 7, 0.75);
 }
 
-.card img,
-.product-page img,
-.cart-item img {
+.product-card img {
   width: 100%;
-  max-width: 320px;
-  border: 1px solid #2a1a22;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   display: block;
-  margin: 0 auto 16px;
+  margin-bottom: 18px;
+  filter: sepia(18%) brightness(78%) contrast(112%);
 }
 
-.card h3 {
-  margin-bottom: 6px;
-  font-size: 21px;
-  font-weight: normal;
-}
-
-.card p,
-.product-page p,
-.cart-item p {
-  color: #b8adb3;
+.product-card h3 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 500;
 }
 
 .price {
-  font-size: 24px;
-  color: #d8c7cf;
+  margin: 0 0 22px;
+  color: #cdbda7;
+  font-size: 17px;
 }
 
-.button,
-button {
-  display: inline-block;
-  background: #7c1f3a;
-  color: white;
-  border: 0;
-  padding: 11px 18px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 15px;
-  cursor: pointer;
+.desc {
+  min-height: 68px;
+  margin: 0 0 22px;
+  color: #c9c0b6;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.buy-button {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  text-align: center;
+  color: #eee9df;
   text-decoration: none;
+  border: 1px solid rgba(238, 233, 223, 0.14);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 17px;
+  transition: background 0.25s ease, border-color 0.25s ease;
 }
 
-.button:hover,
-button:hover {
-  background: #9a2a4c;
+.buy-button:hover {
+  background: rgba(238, 233, 223, 0.12);
+  border-color: rgba(238, 233, 223, 0.42);
 }
 
-.product-page,
-.cart-item {
-  background: #120f12;
-  border: 1px solid #2a1a22;
-  padding: 24px;
+.section-divider {
+  height: 1px;
+  background: rgba(238, 233, 223, 0.7);
+  position: relative;
+  z-index: 4;
 }
 
-.product-page {
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 32px;
-  align-items: start;
-}
-
-.cart-item {
-  display: flex;
-  gap: 22px;
-  margin-bottom: 16px;
-}
-
-.cart-item img {
-  max-width: 120px;
-  margin: 0;
-}
-
-.checkout-form {
-  display: grid;
-  gap: 14px;
-  max-width: 440px;
-}
-
-input {
-  padding: 12px;
-  background: #0b090b;
-  color: #eee7eb;
-  border: 1px solid #33232b;
-  font-family: Georgia, "Times New Roman", serif;
-}
-
-input:focus {
-  outline: none;
-  border-color: #7c1f3a;
+.section-divider span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #142016;
+  color: #eee9df;
+  padding: 0 18px;
+  font-size: 34px;
 }
 
 footer {
+  background: #030504;
   text-align: center;
-  padding: 30px;
-  color: #857982;
-  border-top: 1px solid #2a1a22;
+  padding: 34px 20px;
+  color: #d6cdc2;
 }
 
-@media (max-width: 760px) {
-  .product-page,
-  .cart-item {
-    display: block;
+footer p {
+  margin: 7px 0;
+}
+
+footer span {
+  display: block;
+  font-size: 20px;
+}
+
+@media (max-width: 1000px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  h1 {
-    font-size: 36px;
+  .shop-section {
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
+}
+
+@media (max-width: 620px) {
+  .site-header {
+    position: relative;
+    background: #120c09;
+    padding: 22px;
+    display: block;
+    text-align: center;
+  }
+
+  .site-header h1 {
+    font-size: 38px;
+    margin-bottom: 12px;
+  }
+
+  nav a {
+    margin: 0 9px;
+    font-size: 16px;
+  }
+
+  .shop-section {
+    padding: 70px 18px;
+  }
+
+  .section-title h2 {
+    font-size: 68px;
+  }
+
+  .section-title p {
+    letter-spacing: 4px;
+    font-size: 15px;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
   }
 }
