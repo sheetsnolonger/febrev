@@ -18,11 +18,16 @@
   <h2>cart</h2>
 
   <% if (cart.length === 0) { %>
-    <p>your cart is empty.</p>
+    <section class="hero">
+      <p>your cart is empty.</p>
+      <a class="button" href="/">return to shop</a>
+    </section>
   <% } else { %>
+
     <% cart.forEach(item => { %>
       <div class="cart-item">
         <img src="<%= item.image %>" alt="<%= item.name %>">
+
         <div>
           <h3><%= item.name %></h3>
           <p>$<%= item.price %> x <%= item.quantity %></p>
@@ -34,12 +39,62 @@
       </div>
     <% }) %>
 
-    <h3>total: $<%= total %></h3>
-    <form action="/create-checkout-session" method="POST">
-  <button type="submit">checkout</button>
-</form>
+    <section class="hero">
+      <h3>order summary</h3>
+      <p>subtotal: $<%= total %></p>
+      <p>shipping: $5</p>
+      <p><b>total: $<%= total + 5 %></b></p>
+
+      <div id="paypal-button-container"></div>
+    </section>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=<%= paypalClientId %>&currency=USD"></script>
+
+    <script>
+      paypal.Buttons({
+        createOrder: async function() {
+          const response = await fetch("/api/paypal/create-order", {
+            method: "POST"
+          });
+
+          const order = await response.json();
+
+          if (!response.ok) {
+            alert("could not create paypal order");
+            throw new Error(order.error || "paypal error");
+          }
+
+          return order.id;
+        },
+
+        onApprove: async function(data) {
+          const response = await fetch("/api/paypal/capture-order/" + data.orderID, {
+            method: "POST"
+          });
+
+          const details = await response.json();
+
+          if (!response.ok) {
+            alert("payment capture failed");
+            throw new Error(details.error || "capture error");
+          }
+
+          window.location.href = "/success";
+        },
+
+        onError: function(err) {
+          console.error(err);
+          alert("paypal error");
+        }
+      }).render("#paypal-button-container");
+    </script>
+
   <% } %>
 </main>
+
+<footer>
+  febrev.shop
+</footer>
 
 </body>
 </html>
