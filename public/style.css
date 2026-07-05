@@ -205,22 +205,30 @@ footer span {
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 768px) {
+
   .site-header {
     position: relative;
-    background: #120c09;
-    padding: 22px;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px;
     text-align: center;
   }
 
   .site-header h1 {
     font-size: 38px;
-    margin-bottom: 12px;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   nav a {
-    margin: 0 9px;
+    margin: 0;
     font-size: 16px;
   }
 
@@ -229,15 +237,54 @@ footer span {
   }
 
   .section-title h2 {
-    font-size: 68px;
+    font-size: 56px;
   }
 
   .section-title p {
-    letter-spacing: 4px;
+    letter-spacing: 3px;
     font-size: 15px;
   }
 
   .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .product-card {
+    padding: 12px;
+  }
+
+  .product-card h3 {
+    font-size: 20px;
+  }
+
+  .buy-button {
+    font-size: 15px;
+    padding: 11px;
+  }
+
+  footer {
+    padding: 28px 16px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .product-grid {
     grid-template-columns: 1fr;
   }
+
+  .site-header h1 {
+    font-size: 30px;
+  }
+
+  .section-title h2 {
+    font-size: 42px;
+  }
+
+  .product-card img {
+    aspect-ratio: 1 / 1;
+  }
+
 }
